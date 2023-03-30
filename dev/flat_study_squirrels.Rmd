@@ -1,0 +1,212 @@
+---
+title: "flat_study_squirrels.Rmd for working package"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# get_message_fur_color
+    
+```{r function-get_message_fur_color}
+#' Get a message with the fur color of interest.
+#' 
+#' Get a message with the fur color of interest.
+#' 
+#' @param primary_fur_color Character. The primary fur color of interest
+#' @importFrom glue glue
+#' @return Nothing Used for side effect. Outputs a message in the console
+#' 
+#' @export
+get_message_fur_color <- function(primary_fur_color){
+  color_ok <- check_primary_color_is_ok(primary_fur_color)
+  if(isTRUE(color_ok)){
+     message(glue("We will focus on {primary_fur_color} squirrels"))
+  }
+  else{
+    stop("Incorrect color provided")
+  }
+   
+}
+```
+  
+```{r example-get_message_fur_color , eval=FALSE}
+get_message_fur_color(primary_fur_color = "Cinnamon")
+```
+  
+```{r tests-get_message_fur_color}
+test_that("get_message_fur_color works", {
+  expect_message(
+    object = get_message_fur_color(primary_fur_color = "Cinnamon"), 
+    regexp = "We will focus on Cinnamon squirrels"
+  )
+  expect_error(
+    object =get_message_fur_color(primary_fur_color = "sssddd"),
+    regexp = "Incorrect color provided"
+  )
+  
+  
+  
+  
+})
+```
+  
+<!-- Run this 'development' chunk -->
+<!-- Store every call to library() that you need to explore your functions -->
+
+```{r development, include=FALSE}
+library(testthat)
+library(glue)
+```
+
+<!--
+ You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
+
+If it is the first time you use {fusen}, after 'description', you can directly run the last chunk of the present file with inflate() inside.
+--> 
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Include some data examples in your package
+
+<!-- 
+ Store your dataset in a directory named "inst/" at the root of your project.
+ Use it for your tests in this Rmd thanks to `pkgload::load_all()` to make it available
+and `system.file()` to read it in your examples.
+
+- There already is a dataset in the "inst/" directory to be used in the examples below
+-->
+
+```{r development-dataset}
+# Run all this chunk in the console directly
+# There already is a dataset in the "inst/" directory
+# Make the dataset file available to the current Rmd during development
+pkgload::load_all(path = here::here(), export_all = FALSE)
+
+# You will be able to read your example data file in each of your function examples and tests as follows - see chunks below
+# datafile <- system.file("nyc_squirrels_sample.csv", package = "squirrels")
+# nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
+# 
+# nyc_squirrels
+```
+# check_primary_color_is_ok
+    
+```{r function-check_primary_color_is_ok}
+#' Check the values of primary fur color
+#'
+#' @param string Character. A vector with the primary fur color.
+#'
+#' @return Boolean. TRUE if all colors are correct.
+#' @export
+#'
+#' @examples
+check_primary_color_is_ok <- function(string) {
+  all_colors_OK <- all(
+    string %in% c("Gray", "Cinnamon", "Black", NA)
+  )
+  return(all_colors_OK)
+}
+```
+  
+```{r example-check_primary_color_is_ok , eval=FALSE}
+check_primary_color_is_ok("Cinnamon")
+
+```
+  
+```{r tests-check_primary_color_is_ok}
+test_that("check_primary_color_is_ok works", {
+  expect_true(inherits(check_primary_color_is_ok, "function")) 
+  expect_true(object = check_primary_color_is_ok("Cinnamon"), TRUE)
+  expect_false(object = check_primary_color_is_ok("dsdsds"), FALSE)
+
+})
+```
+# Function to check squirrel data integrity
+
+```{r}
+#' Function to check squirrel data integrity
+#' @param data_df Squirrel dataset
+#' 
+#' @return String returns a message with the data integrity information
+#' 
+#' @export 
+#' 
+#' @examples
+check_squirrel_data_integrity <- function(data_df){
+  
+  if ("primary_fur_color" %in% names(data_df)){
+    res <- check_primary_color_is_ok(data_df$primary_fur_color)
+    if(isTRUE(res)){
+      message("All primary colors are correct")
+    }else{
+      message("Not all primary colors correct")
+    }
+    
+    
+  }else{
+    stop("primary_fur_color column not fount in the dataset")
+  }
+  
+  
+}
+
+
+```
+# Testing check_squirrel_data_integrity function
+
+```{r test-check_squirrel_data_integrity}
+
+test_that("check_squirrel_data_integrity works",
+          {
+            my_data <- readr::read_csv(
+              file = system.file("nyc_squirrels_sample.csv",package="squirrels")
+            )
+            
+            expect_message(check_squirrel_data_integrity(my_data),
+                           regexp = "All primary colors are correct"
+              
+            )
+            # Error: no primary_fur_color column in the dataset
+            
+          })
+
+
+
+```
+
+
+
+```{r}
+data_path <- system.file("nyc_squirrels_sample.csv", package="squirrels")
+sq_data_df <- readr::read_csv(data_path)
+# names(sq_data_df)
+# sq_data_df$primary_fur_color
+
+check_squirrel_data_integrity(sq_data_df)
+```
+
+
+# Loading datasets
+
+```{r}
+usethis::use_data_raw()
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Keep eval=FALSE to avoid infinite loop in case you hit the knit button
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_study_squirrels.Rmd", vignette_name = "Get started",overwrite = TRUE)
+```
+
+
+# Inflate your package
+
+You're one inflate from paper to box.
+Build your package from this very Rmd using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory

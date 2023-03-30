@@ -1,0 +1,70 @@
+---
+title: "flat_check_data.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Check the values of primary fur color
+
+You can check if the column of primary fur color contains only allowed values with `check_primary_color_is_ok()`. 
+
+Allowed values are "Gray", "Cinnamon", "Black", and missing values. If the column contains not allowed values, an explicit error message is displayed.
+
+```{r function-check_primary_color_is_ok}
+#' Check the values of primary fur color
+#'
+#' @param string Character. A vector with the primary fur color.
+#'
+#' @return Boolean. TRUE if all colors are correct.
+#' @export
+#'
+#' @examples
+check_primary_color_is_ok <- function(string) {
+  
+  all_colors_OK <- all(
+    string %in% c("Gray", "Cinnamon", "Black", NA)
+  )
+  
+  if (isFALSE(all_colors_OK)) {
+    stop('The vector of primary fur color contains not allowed colors. Colors should be among values "Gray", "Cinnamon", "Black", or missing values')
+  }
+  
+  return(all_colors_OK)
+}
+```
+  
+```{r example-check_primary_color_is_ok}
+check_primary_color_is_ok(string = c("Black", "Cinnamon", NA))
+check_primary_color_is_ok(string = c("Gray", "Cinnamon", "Gray"))
+```
+  
+```{r tests-check_primary_color_is_ok}
+test_that("check_primary_color_is_ok works", {
+  
+  expect_true(check_primary_color_is_ok(string = c("Black", "Cinnamon", NA))) 
+  
+  expect_true(check_primary_color_is_ok(string = c("Gray", "Cinnamon", "Gray")))
+  
+  expect_error(check_primary_color_is_ok(string = c("Gray", "Cinnamon", "Blue")),
+               regexp = "The vector of primary fur color contains not allowed colors")
+  
+})
+```
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_check_data.Rmd", 
+               vignette_name = "Check data")
+```
+
