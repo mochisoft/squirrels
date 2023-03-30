@@ -36,6 +36,10 @@ usethis::use_git()
 usethis::git_vaccinate()
 # Use main for primary branch
 usethis::git_default_branch_rename()
+
+usethis::use_git_remote("origin",
+                        url = "https://github.com/mochisoft/squirrels.git",
+                        overwrite = TRUE)
 ```
 
 # Set extra sources of documentation
