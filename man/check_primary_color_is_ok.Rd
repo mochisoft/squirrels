@@ -17,5 +17,4 @@ Check the values of primary fur color
 }
 \examples{
 check_primary_color_is_ok("Cinnamon")
-
 }

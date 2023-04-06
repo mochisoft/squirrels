@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_message_fur_color.R
 \name{get_message_fur_color}
 \alias{get_message_fur_color}
-\title{Get a message with the fur color of interest.}
+\title{Get a message with the fur color of interest}
 \usage{
 get_message_fur_color(primary_fur_color)
 }
@@ -10,10 +10,10 @@ get_message_fur_color(primary_fur_color)
 \item{primary_fur_color}{Character. The primary fur color of interest}
 }
 \value{
-Nothing Used for side effect. Outputs a message in the console
+Used for side effect. Outputs a message in the console
 }
 \description{
-Get a message with the fur color of interest.
+Get a message with the fur color of interest
 }
 \examples{
 get_message_fur_color(primary_fur_color = "Cinnamon")

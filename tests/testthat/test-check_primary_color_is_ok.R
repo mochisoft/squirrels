@@ -4,5 +4,5 @@ test_that("check_primary_color_is_ok works", {
   expect_true(inherits(check_primary_color_is_ok, "function")) 
   expect_true(object = check_primary_color_is_ok("Cinnamon"), TRUE)
   expect_false(object = check_primary_color_is_ok("dsdsds"), FALSE)
-
+  
 })

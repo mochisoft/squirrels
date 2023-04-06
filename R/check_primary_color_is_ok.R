@@ -9,7 +9,6 @@
 #'
 #' @examples
 #' check_primary_color_is_ok("Cinnamon")
-#' 
 check_primary_color_is_ok <- function(string) {
   all_colors_OK <- all(
     string %in% c("Gray", "Cinnamon", "Black", NA)
